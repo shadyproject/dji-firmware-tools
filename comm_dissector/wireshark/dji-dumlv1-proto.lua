@@ -1,6 +1,20 @@
 -- Create a new dissector
 DJI_DUMLv1_PROTO = Proto ("dji_dumlv1", "DJI_DUMLv1", "Dji DUML v1 communication protocol")
 
+-- Quick bit32 compatibility shim for Lua 5.3+
+if not bit32 then
+    bit32 = {
+        band = function(a, b) return a & b end,
+        bor  = function(a, b) return a | b end,
+        bxor = function(a, b) return a ~ b end,
+        lshift = function(a, b) return a << b end,
+        rshift = function(a, b) return a >> b end,
+    }
+end
+
+-- Capture the current path and use it in dofile below
+local script_path = debug.getinfo(1, "S").source:sub(2):match("(.*/)")
+
 local f = DJI_DUMLv1_PROTO.fields
 local enums = {}
 
@@ -497,10 +511,11 @@ local ADSB_UART_CMD_TEXT = {
     [0x17] = 'Push Avoidance Action Get ',
 }
 
-dofile('dji-dumlv1-general.lua')
-dofile('dji-dumlv1-camera.lua')
-dofile('dji-dumlv1-flyc.lua')
-dofile('dji-dumlv1-gimbal.lua')
+-- NOTE: These were not found in CWD
+dofile(script_path .. 'dji-dumlv1-general.lua')
+dofile(script_path .. 'dji-dumlv1-camera.lua')
+dofile(script_path .. 'dji-dumlv1-flyc.lua')
+dofile(script_path .. 'dji-dumlv1-gimbal.lua')
 
 DJI_DUMLv1_CMD_TEXT = {
     [0x00] = GENERAL_UART_CMD_TEXT,
