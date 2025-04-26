@@ -2809,8 +2809,6 @@ def sbs_read_firmware_version_bq_sealed(bus, dev_addr, po):
 
 
 def smart_battery_bq_detect(vals, po):
-    global bus
-
     v = None
     for nretry in reversed(range(3)):
         try:
@@ -3079,7 +3077,6 @@ def smart_battery_system_info(cmd_str, vals, po):
 def smart_battery_system_read(cmd_str, vals, po):
     """ Reads and prints value of the command from the battery.
     """
-    global bus
     cmd, subcmd = smart_battery_system_command_from_text(cmd_str, po, define_new=True)
     cmdinf = SBS_CMD_INFO[cmd]
     opts = {'subcmd': subcmd}
@@ -3092,7 +3089,6 @@ def smart_battery_system_read(cmd_str, vals, po):
 def smart_battery_system_trigger(cmd_str, vals, po):
     """ Trigger a switch command within the battery.
     """
-    global bus
     cmd, subcmd = smart_battery_system_command_from_text(cmd_str, po, define_new=True)
     if subcmd is not None:
         basecmd_name = re.sub('[^A-Z0-9]', '', cmd.name) + '.' + subcmd.name
@@ -3116,7 +3112,6 @@ def smart_battery_system_trigger(cmd_str, vals, po):
 def smart_battery_system_write(cmd_str, nval_str, vals, po):
     """ Write value to a command within the battery.
     """
-    global bus
     cmd, subcmd = smart_battery_system_command_from_text(cmd_str, po, define_new=True)
     if subcmd is not None:
         basecmd_name = re.sub('[^A-Z0-9]', '', cmd.name) + '.' + subcmd.name
@@ -3140,7 +3135,6 @@ def smart_battery_system_write(cmd_str, nval_str, vals, po):
 def smart_battery_system_raw_read(knd_str, addr, val_type, vals, po):
     """ Reads and prints raw value from address space of the battery.
     """
-    global bus
     knd = smart_battery_system_address_space_from_text(knd_str, addr, po)
     kndinf = RAW_ADDRESS_SPACE_KIND_INFO[knd]
 
@@ -3210,7 +3204,6 @@ def smart_battery_system_raw_write(knd_str, addr, val_type, nval_str, vals, po):
 def smart_battery_system_raw_backup(knd_str, fname, vals, po):
     """ Reads raw data from address space of the battery, and stores in a file.
     """
-    global bus
     addr = 0x0
     knd = smart_battery_system_address_space_from_text(knd_str, addr, po)
     kndinf = RAW_ADDRESS_SPACE_KIND_INFO[knd]
@@ -3240,7 +3233,6 @@ def smart_battery_system_raw_restore(knd_str, fname, vals, po):
     """ Writes raw data to address space of the battery, from a file.
     """
     from functools import partial
-    global bus
     addr = 0x0
     knd = smart_battery_system_address_space_from_text(knd_str, addr, po)
     kndinf = RAW_ADDRESS_SPACE_KIND_INFO[knd]
@@ -3271,7 +3263,6 @@ def smart_battery_system_raw_restore(knd_str, fname, vals, po):
 def smart_battery_system_monitor(mgroup_str, vals, po):
     """ Reads and prints multiple values from the battery.
     """
-    global bus
     mgroup = MONITOR_GROUP.from_name(mgroup_str)
     names_width = 0
     for cmd in SBS_CMD_GROUPS[mgroup]:
@@ -3303,8 +3294,6 @@ def smart_battery_system_monitor(mgroup_str, vals, po):
 def smart_battery_system_sealing(seal_str, vals, po):
     """ Change sealing state of the battery.
     """
-    global bus
-
     if seal_str in SBS_SEALING:
         auth = SBS_SEALING[seal_str]['auth']
         cmd = SBS_SEALING[seal_str]['cmd']
@@ -3461,9 +3450,6 @@ def main(argv=sys.argv[1:]):
 
       Its task is to parse command line options and call a function which performs sniffing.
     """
-
-    global driver_cache
-
     addrspace_datatypes = [ "int8", "uint8", "int16", "uint16", "int32", "uint32", "float", 'string[n]', 'byte[n]']
 
     parser = argparse.ArgumentParser(description=__doc__.split('.')[0])
