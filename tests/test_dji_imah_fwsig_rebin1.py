@@ -541,7 +541,7 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
             module_changes_limit = 2 + 4 + 4 + 256 + 9*16 + 32 + 6*16
         # specific first level modules with unsupported signature_size=384
         elif (re.match(r'^.*/(wm260|wm2605)_0802_v[0-9a-z_.-]*[.]pro[.]fw[.]sig$', modl_inp_fn, re.IGNORECASE)):
-            module_cmdopts = "-k PRAK-2020-01 -k UFIE-2020-04 -f"
+            module_cmdopts = "-k PRAK-2020-01 -k UFIE-2021-08 -f"
             module_changes_limit = 999999 # we can not re-create signature
         # specific first level modules with encrypted data checksum verification issues
         elif (re.match(r'^.*V00[.]20[.]0101_wm260_dji_system/wm260([._].*)?[.]cfg[.]sig$', modl_inp_fn, re.IGNORECASE) or
