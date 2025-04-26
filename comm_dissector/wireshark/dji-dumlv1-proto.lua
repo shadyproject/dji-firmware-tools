@@ -3,17 +3,22 @@ DJI_DUMLv1_PROTO = Proto ("dji_dumlv1", "DJI_DUMLv1", "Dji DUML v1 communication
 
 -- Quick bit32 compatibility shim for Lua 5.3+
 if not bit32 then
-    bit32 = {
+    bit32 = bit32 or load([[return {
         band = function(a, b) return a & b end,
-        bor  = function(a, b) return a | b end,
+        bor = function(a, b) return a | b end,
         bxor = function(a, b) return a ~ b end,
-        lshift = function(a, b) return a << b end,
-        rshift = function(a, b) return a >> b end,
-    }
+        bnot = function(a) return ~a end,
+        rshift = function(a, n) return a >> n end,
+        lshift = function(a, n) return a << n end,
+    }]])()
 end
 
 -- Capture the current path and use it in dofile below
-local script_path = debug.getinfo(1, "S").source:sub(2):match("(.*/)")
+local script_path;
+do
+    local sep = package.config:sub(1,1);
+    script_path = debug.getinfo(1, "S").source:sub(2):match("(.*"..sep..")")
+end
 
 local f = DJI_DUMLv1_PROTO.fields
 local enums = {}
