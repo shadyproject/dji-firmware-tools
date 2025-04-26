@@ -634,7 +634,6 @@ re_general_list = [
 
 
 def get_asm_arch_by_name(arname):
-    global elf_archs
     for arch in elf_archs:
         if arch['name'] == arname:
             return arch.copy()
@@ -2580,7 +2579,6 @@ def armfw_elf_paramvals_export_simple_list(po, params_list, valfile):
 
 
 def armfw_elf_ambavals_list(po, elffh):
-    global re_general_list
     params_list, _, _, _, _, _ = armfw_elf_paramvals_extract_list(po, elffh, re_general_list, 'arm')
     # print list of parameter values
     armfw_elf_paramvals_export_simple_list(po, params_list, sys.stdout)
@@ -2606,7 +2604,6 @@ def armfw_elf_paramvals_export_mapfile(po, params_list, elf_sections, asm_arch, 
 
 
 def armfw_elf_ambavals_mapfile(po, elffh):
-    global re_general_list
     _, params_list, elf_sections, _, _, asm_arch = armfw_elf_paramvals_extract_list(po, elffh, re_general_list, 'arm')
     armfw_elf_paramvals_export_mapfile(po, params_list, elf_sections, asm_arch, sys.stdout)
 
@@ -2655,7 +2652,6 @@ def armfw_elf_paramvals_export_json(po, params_list, valfile):
 def armfw_elf_ambavals_extract(po, elffh):
     """ Extracts all values from firmware to JSON format text file.
     """
-    global re_general_list
     params_list, _, _, _, _, _ = armfw_elf_paramvals_extract_list(po, elffh, re_general_list, 'arm')
     if len(params_list) <= 0:
         raise ValueError("No known values found in ELF file.")
@@ -2788,7 +2784,6 @@ def armfw_elf_paramvals_update_list(po, asm_arch, re_list, pub_params_list, glob
 def armfw_elf_ambavals_update(po, elffh):
     """ Updates all hardcoded values in firmware from JSON format text file.
     """
-    global re_general_list
     pub_params_list, glob_params_list, elf_sections, cs, elfobj, asm_arch = \
       armfw_elf_paramvals_extract_list(po, elffh, re_general_list, 'arm')
     if len(pub_params_list) <= 0:
