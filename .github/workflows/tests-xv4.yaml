@@ -86,7 +86,10 @@ jobs:
     - name: Build mkbootimg
       run: |
         cd mkbootimg
-        make
+        # Disable optimizations forcing by Makefile
+        sed -i 's/ -O[0-3]//' Makefile
+        # Run with `-O2` instead of recommended `-O3` to avoid ubuntu-24 gcc fail over its own optimization
+        make CFLAGS='-O2'
         cd -
 
     - name: Build rkflashtool
