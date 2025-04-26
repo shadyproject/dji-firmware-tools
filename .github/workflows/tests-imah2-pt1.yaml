@@ -23,16 +23,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, ubuntu-latest]
-        python-version: ["3.8", "3.10"]
+        os: [ubuntu-22.04, ubuntu-latest]
+        python-version: ["3.10", "3.12"]
         firmwares-bundle: ["bundle1", "bundle2"]
         # No need to test any python version on multiple Ubuntu versions, the Ubuntu version is
         # only to provide best matching environment for the Python.
         exclude:
           - os: ubuntu-latest
-            python-version: "3.8"
-          - os: ubuntu-20.04
             python-version: "3.10"
+          - os: ubuntu-22.04
+            python-version: "3.12"
     env:
       working-directory: dji-firmware-tools
     defaults:
