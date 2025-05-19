@@ -75,6 +75,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y libusb-1.0-0-dev # required to build rkflashtool
         sudo apt-get install -y binutils-arm-none-eabi # required to test bin2elf
+        sudo apt-get install -y wireshark # required to use LUA dissectors
         python -m pip install --upgrade pip
         pip install pyserial # required to test comm_* tools
         pip install lz4 # required to extract compressed files within the FW modules
@@ -97,6 +98,14 @@ jobs:
         cd rkflashtool
         make
         cd -
+
+    - name: Install dissectors for Wireshark
+      run: |
+        mkdir -p $HOME/.config/wireshark
+        cp "comm_dissector/wireshark/init.lua" "$HOME/.config/wireshark/init.lua"
+        sed -i 's/dji_script_path = \".*\"/dji_script_path = \"${{ env.working-directory }}\/comm_dissector\/wireshark\/\"/' "$HOME/.config/wireshark/init.lua"
+        touch "$HOME/.config/wireshark/user_dlts"
+        echo '"User 3 (DLT=150)","dji_dumlv1","0","","0",""' | tee -a "$HOME/.config/wireshark/user_dlts"
 
     - name: Lint with flake8
       run: |
