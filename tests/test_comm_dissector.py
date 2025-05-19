@@ -22,9 +22,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-pckt_mavic_air_fcc = [0x55, 0x17, 0x04, 0x38, 0x02, 0x0e, 0x1d, 0x00, 0x40, 0x07, 0x30, 0x55, 0x53, 0x00, 0x00, 0x55, 0x53, 0x00, 0x00, 0x01, 0x00, 0xfe, 0x5d]
-pckt_mini_2_fcc = [0x55, 0x18, 0x04, 0x20, 0x02, 0x09, 0x00, 0x00, 0x40, 0x09, 0x27, 0x00, 0x02, 0x48, 0x00, 0xff, 0xff, 0x02, 0x00, 0x00, 0x00, 0x00, 0x81, 0x1f]
-
 import logging
 import subprocess
 import os
@@ -35,9 +32,10 @@ import time
 import datetime
 import pytest
 
-import array
-
 LOGGER = logging.getLogger(__name__)
+
+pckt_mavic_air_fcc = [0x55, 0x17, 0x04, 0x38, 0x02, 0x0e, 0x1d, 0x00, 0x40, 0x07, 0x30, 0x55, 0x53, 0x00, 0x00, 0x55, 0x53, 0x00, 0x00, 0x01, 0x00, 0xfe, 0x5d]
+pckt_mini_2_fcc = [0x55, 0x18, 0x04, 0x20, 0x02, 0x09, 0x00, 0x00, 0x40, 0x09, 0x27, 0x00, 0x02, 0x48, 0x00, 0xff, 0xff, 0x02, 0x00, 0x00, 0x00, 0x00, 0x81, 0x1f]
 
 def write_one_packet_pcap(fname, userdlt, data):
     with open(fname, "wb") as out:
@@ -78,11 +76,10 @@ def case_comm_dissector_tshark_show(pcap_file, userdlt, proto_name, pckt, env=No
     write_one_packet_pcap(pcap_file, userdlt, bytearray(pckt))
     run_comm_dissector_tshark_show("tshark", str(pcap_file), proto_name, pkt_cmd, env=env)
 
-# Make this a separate mark rather than comm, until our CI can execute this correctly
-@pytest.mark.commDISS
+@pytest.mark.comm
 def test_comm_dissector_tshark_show(tmp_path):
     """ Test dissecting a packet with Wiresharks tshark.
     """
     test_env = os.environ.copy()
-    case_comm_dissector_tshark_show(tmp_path / "dji-packet.pcap", 3, "DJI_DUMLv1", pckt_mavic_air_fcc, env=test_env)
-    case_comm_dissector_tshark_show(tmp_path / "dji-packet.pcap", 3, "DJI_DUMLv1", pckt_mini_2_fcc, env=test_env)
+    case_comm_dissector_tshark_show(tmp_path / "dji-packet-mavair.pcap", 3, "DJI_DUMLv1", pckt_mavic_air_fcc, env=test_env)
+    case_comm_dissector_tshark_show(tmp_path / "dji-packet-mini2.pcap",  3, "DJI_DUMLv1", pckt_mini_2_fcc, env=test_env)
