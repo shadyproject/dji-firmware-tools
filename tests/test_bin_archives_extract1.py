@@ -316,6 +316,7 @@ def case_bin_single_decompress(modl_inp_fn):
 @pytest.mark.parametrize("modl_inp_dir,test_nth", [
     ('out/gl300abc-radio_control',1,),
     ('out/gl300e-radio_control',1,),
+    ('out/gl858-radio_control',1,),
     ('out/m600-matrice_600_hexacopter',1,),
     ('out/osmo_fc550-osmo_x5_gimbal',1,),
     ('out/osmo_fc550r-osmo_x5raw_gimbal',1,),

@@ -175,6 +175,7 @@ def case_lightbridge_stm32_hardcoder_ckmod(elf_inp_fn):
     #('out/ag405-agras_mg_1s_octocopter',1,), # no matching modules
     ('out/gl300abc-radio_control',3,),
     ('out/gl300e-radio_control',1,),
+    ('out/gl858-radio_control',1,),
     ('out/hg910-ronin2_gimbal',1,),
     ('out/p3c-phantom_3_std_quadcopter',1,),
     ('out/p3s-phantom_3_adv_quadcopter',3,),

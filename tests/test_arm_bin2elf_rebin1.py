@@ -355,6 +355,7 @@ def case_arm_bin2elf_rebin(capsys, cmdargs, modl_inp_fn):
     ('out/ennn-esc',1,),
     ('out/gl300abc-radio_control',1,),
     ('out/gl300e-radio_control',1,),
+    ('out/gl858-radio_control',1,),
     ('out/hg211-osmo_pocket_2',1,),
     ('out/hg300-osmo_mobile',1,),
     ('out/hg301-osmo_mobile_2',1,),

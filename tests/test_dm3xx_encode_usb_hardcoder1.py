@@ -128,6 +128,7 @@ def case_dm3xx_encode_usb_hardcoder_ckmod(elf_inp_fn):
 @pytest.mark.parametrize("modl_inp_dir,test_nth", [
     #('out/gl300abc-radio_control',3,), # Currently we do not have anything to extract from the m1300 modules in this directory
     #('out/gl300e-radio_control',1,), # There is m1300 in one of these firmwares, but it is not SSL'ed TGZ, but OTA ZIP file
+    #('out/gl858-radio_control',1,), # Currently we do not have anything to extract from the m1300 modules in this directory
     ('out/m600-matrice_600_hexacopter',3,),
     ('out/osmo_fc550-osmo_x5_gimbal',3,),
     ('out/osmo_fc550r-osmo_x5raw_gimbal',3,),

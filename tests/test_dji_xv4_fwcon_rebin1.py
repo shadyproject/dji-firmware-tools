@@ -108,6 +108,7 @@ def case_dji_xv4_fwcon_rebin(capsys, cmdargs, pkg_inp_fn):
     ('fw_packages/ennn-esc',1,),
     ('fw_packages/gl300abc-radio_control',1,),
     ('fw_packages/gl300e-radio_control',1,),
+    ('fw_packages/gl858-radio_control',1,),
     ('fw_packages/hg211-osmo_pocket_2',1,),
     ('fw_packages/hg300-osmo_mobile',1,),
     ('fw_packages/hg301-osmo_mobile_2',1,),
