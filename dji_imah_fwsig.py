@@ -943,7 +943,9 @@ def imah_unsign(po, fwsigfile):
 
     auth_key = imah_get_auth_params(po, pkghead)
 
-    if (auth_key.size_in_bytes() != len(head_signature)):
+    if auth_key is None:
+        raise_or_warn(po, ValueError("Image file head signature verification will fail due to no auth key."))
+    elif auth_key.size_in_bytes() != len(head_signature):
         raise_or_warn(po, ValueError("Image file head signature does not match the length of auth key."))
 
     try:
@@ -1125,7 +1127,11 @@ def imah_sign(po, fwsigfile):
         chunks.append(chunk)
     # Figure out signature length
     auth_key = imah_get_auth_params(po, pkghead)
-    pkghead.signature_size = auth_key.size_in_bytes()
+    if auth_key is None:
+        eprint("{}: Warning: Signed file layout may be incorrect due to unknown auth key length."
+          .format(fwsigfile.name))
+    else:
+        pkghead.signature_size = auth_key.size_in_bytes()
     # Write the unfinished headers
     fwsigfile.write(bytes(pkghead))
     for chunk in chunks:
