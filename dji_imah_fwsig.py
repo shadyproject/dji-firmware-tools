@@ -24,7 +24,7 @@ to decrypt its content.
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-__version__ = "0.3.1"
+__version__ = "0.3.2"
 __author__ = "Freek van Tienen, Jan Dumon, Mefistotelis @ Original Gangsters"
 __license__ = "GPL"
 
@@ -824,7 +824,7 @@ def imah_read_fwsig_head(po):
     minames = minames_s.split(' ')
     pkghead.chunk_num = len(minames)
     pkghead.header_size = sizeof(pkghead) + sizeof(ImgChunkHeader)*pkghead.chunk_num
-    pkghead.signature_size = 256
+    pkghead.signature_size = 384 # Depends on auth key length - just storing plausible value now
     pkghead.update_payload_size(0)
 
     del parser
@@ -933,13 +933,19 @@ def imah_unsign(po, fwsigfile):
         print("Computed header checksum 0x{:08X} and digest:\n{:s}"
           .format(checksum_enc, ' '.join("{:02X}".format(x) for x in header_digest.digest())))
 
-    if pkghead.signature_size != 256: # 2048 bit key length
+    # 2048 bit key (and therefore signature) length - used since introduction of IMaH until 2022 (header_ver=1,2)
+    # 3072 bit key (and therefore signature) length - used since wm260,zv900 in 2022 (header_ver=2)
+    if pkghead.signature_size != 256 and pkghead.signature_size != 384:
         raise_or_warn(po, ValueError("Signed image file head signature has unexpected size."))
     head_signature = fwsigfile.read(pkghead.signature_size)
     if len(head_signature) != pkghead.signature_size:
         raise EOFError("Could not read signature of signed image file head.")
 
     auth_key = imah_get_auth_params(po, pkghead)
+
+    if (auth_key.size_in_bytes() != len(head_signature)):
+        raise_or_warn(po, ValueError("Image file head signature does not match the length of auth key."))
+
     try:
         if pkgformat >= 2018:
             mgf = lambda x, y: pss.MGF1(x, y, SHA256)
@@ -1117,6 +1123,9 @@ def imah_sign(po, fwsigfile):
         else:
             chunk = imah_read_fwentry_head(po, i, miname)
         chunks.append(chunk)
+    # Figure out signature length
+    auth_key = imah_get_auth_params(po, pkghead)
+    pkghead.signature_size = auth_key.size_in_bytes()
     # Write the unfinished headers
     fwsigfile.write(bytes(pkghead))
     for chunk in chunks:
@@ -1260,7 +1269,6 @@ def imah_sign(po, fwsigfile):
         print("{}: Computed header digest:\n{:s}".format(fwsigfile.name,
           ' '.join("{:02X}".format(x) for x in header_digest.digest())))
 
-    auth_key = imah_get_auth_params(po, pkghead)
     if not hasattr(auth_key, 'd'):
         raise ValueError("Cannot compute image file head signature, auth key '{:s}' has no private part."
           .format(pkghead.auth_key.decode("utf-8")))
