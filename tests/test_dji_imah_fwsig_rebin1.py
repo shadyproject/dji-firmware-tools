@@ -341,8 +341,27 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
             module_cmdopts = "-k PRAK-2017-01 -k PUEK-2017-09 -f" # PUEK not published, forcing extract encrypted
             # allow change of 2 bytes from auth key name, 4 from enc checksum, 256 from signature
             module_changes_limit = 2 + 4 + 256
-    elif (m := re.match(r'^.*/(wm170|wm231|wm232|gl170|pm430|ag500)([._].*)?[.](bin|cfg|enc|fw|img|sig|ta|txt)$', modl_inp_fn, re.IGNORECASE)):
+    elif (m := re.match(r'^.*/(wm231)([._].*)?[.](bin|cfg|enc|fw|img|sig|ta|txt)$', modl_inp_fn, re.IGNORECASE)):
         platform = m.group(1)
+        # specific nested modules
+        if (re.match(r'^.*{:s}_0801_[^/]*[.]fw_0801.*\/modem_firmware.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
+            module_cmdopts = "-k PRAK-2018-01 -k TBIE-2020-04"
+            # allow change of 2 bytes from auth key name, 4+4 from enc+dec checksum, 256 from signature, up to 11x16 chunk padding, 32 payload digest
+            module_changes_limit = 2 + 4 + 4 + 256 + 11*16 + 32
+        # remaining nested modules
+        elif (re.match(r'^.*{:s}_0701_[^/]*[.]fw_0701.*$'.format(platform), modl_inp_fn, re.IGNORECASE) or
+          re.match(r'^.*{:s}_0801_[^/]*[.]fw_0801.*$'.format(platform), modl_inp_fn, re.IGNORECASE) or
+          re.match(r'^.*{:s}_0802_[^/]*[.]fw_0802.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
+            module_cmdopts = "-k PRAK-2020-01 -k TBIE-2020-02"
+            # allow change of 2 bytes from auth key name, 4+4 from enc+dec checksum, 256 from signature, up to 11x16 chunk padding, 32 payload digest
+            module_changes_limit = 2 + 4 + 4 + 256 + 11*16 + 32
+        else: # if first level module
+            module_cmdopts = "-k PRAK-2020-01 -k UFIE-2020-04"
+            # allow change of 2 bytes from auth key name, 4 from enc checksum, 256 from signature
+            module_changes_limit = 2 + 4 + 256
+    elif (m := re.match(r'^.*/(wm170|wm232|gl170|pm430|ag500)([._].*)?[.](bin|cfg|enc|fw|img|sig|ta|txt)$', modl_inp_fn, re.IGNORECASE)):
+        platform = m.group(1)
+        # nested modules
         if (re.match(r'^.*{:s}_0701_[^/]*[.]fw_0701.*$'.format(platform), modl_inp_fn, re.IGNORECASE) or
           re.match(r'^.*{:s}_0801_[^/]*[.]fw_0801.*$'.format(platform), modl_inp_fn, re.IGNORECASE) or
           re.match(r'^.*{:s}_0802_[^/]*[.]fw_0802.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
