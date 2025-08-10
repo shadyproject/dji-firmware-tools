@@ -539,6 +539,10 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
             module_cmdopts = "-k PRAK-2020-01 -k TBIE-2020-02 -f" # TBIE not published, forcing extract encrypted
             # allow change of 2 bytes from auth key name, 4+4 from enc+dec checksum, 256 from signature, up to 9x16 chunk padding, 32 payload digest, 6x16 unknown additional
             module_changes_limit = 2 + 4 + 4 + 256 + 9*16 + 32 + 6*16
+        # specific nested modules
+        elif (re.match(r'^.*{:s}_0802_[^/]*[.]fw_0802.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
+            module_cmdopts = "-k PRAK-2020-01 -k TBIE-2020-02 -f" # unsupported signature_size=384 - forcing extract
+            module_changes_limit = 999999 # we can not re-create signature
         # specific first level modules with unsupported signature_size=384
         elif (re.match(r'^.*/(wm260|wm2605)_0802_v[0-9a-z_.-]*[.]pro[.]fw[.]sig$', modl_inp_fn, re.IGNORECASE)):
             module_cmdopts = "-k PRAK-2020-01 -k UFIE-2021-08 -f"
