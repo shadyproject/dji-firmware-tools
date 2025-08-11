@@ -83,8 +83,8 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
         if False:
             pass # no quirks
         else: # if first level module
-            module_cmdopts = "-k PRAK-2020-01 -k UFIE-9999-99 -f" # unsupported signature_size=384 - forcing extract
-            module_changes_limit = 999999 # we can not re-create signature
+            module_cmdopts = "-k PRAK-2020-01 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
+            module_changes_limit = 999999 # SLAK signature is shorter, making file layout different
     elif (m := re.match(r'^.*/(ag406|ag407|ag408|ag410|ag411)([._].*)?[.](bin|cfg|enc|fw|img|sig|ta|txt)$', modl_inp_fn, re.IGNORECASE)):
         platform = m.group(1)
         if (re.match(r'^.*{:s}_0801_[^/]*[.]fw_0801.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
@@ -172,8 +172,8 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
         if False:
             pass # no quirks
         else: # if first level module
-            module_cmdopts = "-k PRAK-2020-01 -k UFIE-9999-99 -f" # unsupported signature_size=384 - forcing extract
-            module_changes_limit = 999999 # we can not re-create signature
+            module_cmdopts = "-k PRAK-2020-01 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
+            module_changes_limit = 999999 # SLAK signature is shorter, making file layout different
     elif (m := re.match(r'^.*/(pm320)([._].*)?[.](bin|cfg|enc|fw|img|sig|ta|txt)$', modl_inp_fn, re.IGNORECASE)):
         platform = m.group(1)
         if (re.match(r'^.*{:s}_0702_[^/]*[.]fw_0702.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
@@ -184,10 +184,10 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
             module_cmdopts = "-k PRAK-2020-01 -k TBIE-2020-02"
             # allow change of 2 bytes from auth key name, 256 from signature, up to 3x16 chunk padding
             module_changes_limit = 2 + 256 + 3*16
-        # specific first level modules with unsupported signature_size=384
+        # specific first level modules with different keys
         elif (re.match(r'^.*pm320_2805_v[0-9a-z_.-]*[.]pro[.]fw[.]sig$', modl_inp_fn, re.IGNORECASE)):
-            module_cmdopts = "-k PRAK-2020-01 -k UFIE-2020-04 -f"
-            module_changes_limit = 999999 # we can not re-create signature
+            module_cmdopts = "-k PRAK-2021-09 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
+            module_changes_limit = 999999 # SLAK signature is shorter, making file layout different
         else: # if first level module
             module_cmdopts = "-k PRAK-2020-01 -k UFIE-2020-04"
             # allow change of 2 bytes from auth key name, 4+4 from enc+dec checksum, 256 from signature, up to 2*16 chunk padding
@@ -439,15 +439,15 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
         if False:
             pass # no quirks
         else: # if first level module
-            module_cmdopts = "-k PRAK-2019-09 -k UFIE-9999-99 -f" # unsupported signature_size=384 - forcing extract
-            module_changes_limit = 999999 # we can not re-create signature
+            module_cmdopts = "-k PRAK-2019-09 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
+            module_changes_limit = 999999 # SLAK signature is shorter, making file layout different
     elif (m := re.match(r'^.*/(wm1695)([._].*)?[.](bin|cfg|enc|fw|img|sig|ta|txt)$', modl_inp_fn, re.IGNORECASE)):
         platform = m.group(1)
         if False:
             pass # no quirks
         else: # if first level module
-            module_cmdopts = "-k PRAK-2019-09 -k UFIE-9999-99 -f" # unsupported signature_size=384 - forcing extract
-            module_changes_limit = 999999 # we can not re-create signature
+            module_cmdopts = "-k PRAK-2019-09 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
+            module_changes_limit = 999999 # SLAK signature is shorter, making file layout different
     elif (m := re.match(r'^.*/(wm220)([._].*)?[.](bin|cfg|enc|fw|img|sig|ta|txt)$', modl_inp_fn, re.IGNORECASE)):
         platform = m.group(1)
         if (re.match(r'^.*{:s}_0801_[^/]*[.]fw_0801.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
@@ -513,8 +513,8 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
         if False:
             pass # no quirks
         else: # if first level module
-            module_cmdopts = "-k PRAK-2019-09 -k UFIE-9999-99 -f" # unsupported signature_size=384 - forcing extract
-            module_changes_limit = 999999 # we can not re-create signature
+            module_cmdopts = "-k PRAK-2019-09 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
+            module_changes_limit = 999999 # SLAK signature is shorter, making file layout different
     elif (m := re.match(r'^.*/(wm240|wm245|wm246)([._].*)?[.](bin|cfg|enc|fw|img|sig|ta|txt)$', modl_inp_fn, re.IGNORECASE)):
         platform = m.group(1)
         if (re.match(r'^.*{:s}_0901_[^/]*[.]fw_0901.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
@@ -535,7 +535,13 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
             module_changes_limit = 2 + 4 + 4 + 256 + 1*16 + 32
     elif (m := re.match(r'^.*/(wm247)([._].*)?[.](bin|cfg|enc|fw|img|sig|ta|txt)$', modl_inp_fn, re.IGNORECASE)):
         platform = m.group(1)
-        if (re.match(r'^.*{:s}_0801_[^/]*[.]fw_0801.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
+        # specific files within nested modules - nfz.fw.bin uses older keys
+        if (re.match(r'^.*{:s}_0801_[^/]*[.]fw_0801.*\/nfz\/.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
+            module_cmdopts = "-k PRAK-2017-08 -k TBIE-2018-07"
+            # allow change of 2 bytes from auth key name, 256 from signature, up to 6x16 chunk padding, 32 payload digest, 3x16 unknown additional
+            module_changes_limit = 2 + 256 + 6*16 + 32 + 4*16
+        # specific nested modules
+        elif (re.match(r'^.*{:s}_0801_[^/]*[.]fw_0801.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
             module_cmdopts = "-k PRAK-2020-01 -k TBIE-2020-02"
             # allow change of 2 bytes from auth key name, 256 from signature, up to 6x16 chunk padding, 32 payload digest, 3x16 unknown additional
             module_changes_limit = 2 + 256 + 6*16 + 32 + 4*16
@@ -560,12 +566,12 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
             module_changes_limit = 2 + 4 + 4 + 256 + 9*16 + 32 + 6*16
         # specific nested modules
         elif (re.match(r'^.*{:s}_0802_[^/]*[.]fw_0802.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
-            module_cmdopts = "-k PRAK-2020-01 -k TBIE-2020-02 -f" # unsupported signature_size=384 - forcing extract
-            module_changes_limit = 999999 # we can not re-create signature
-        # specific first level modules with unsupported signature_size=384
+            module_cmdopts = "-k PRAK-2021-09 -k TBIE-2020-02" # first level key is not publihed, making this unused
+            module_changes_limit = 999999 # SLAK signature is shorter, making file layout different
+        # specific first level modules with different keys
         elif (re.match(r'^.*/(wm260|wm2605)_0802_v[0-9a-z_.-]*[.]pro[.]fw[.]sig$', modl_inp_fn, re.IGNORECASE)):
-            module_cmdopts = "-k PRAK-2020-01 -k UFIE-2021-08 -f"
-            module_changes_limit = 999999 # we can not re-create signature
+            module_cmdopts = "-k PRAK-2021-09 -k UFIE-2021-08 -f" # UFIE not published, forcing extract encrypted
+            module_changes_limit = 999999 # SLAK signature is shorter, making file layout different
         # specific first level modules with encrypted data checksum verification issues
         elif (re.match(r'^.*V00[.]20[.]0101_wm260_dji_system/wm260([._].*)?[.]cfg[.]sig$', modl_inp_fn, re.IGNORECASE) or
           re.match(r'^.*V01[.]00[.]0100_wm260_dji_system/wm260([._].*)?[.]cfg[.]sig$', modl_inp_fn, re.IGNORECASE)):
@@ -581,8 +587,8 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
         if False:
             pass # no quirks
         else: # if first level module
-            module_cmdopts = "-k PRAK-2019-09 -k UFIE-9999-99 -f" # unsupported signature_size=384 - forcing extract
-            module_changes_limit = 999999 # we can not re-create signature
+            module_cmdopts = "-k PRAK-2019-09 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
+            module_changes_limit = 999999 # SLAK signature is shorter, making file layout different
     else:
         platform = "unknown"
         module_cmdopts = ""
