@@ -570,13 +570,23 @@ class ImgChunkHeader(LittleEndianStructure):
         return pformat(d, indent=0, width=160)
 
 
-class ImgRSAPublicKey(LittleEndianStructure):
+class ImgRSAPublicKey64(LittleEndianStructure):
     _pack_ = 1
     _fields_ = [
         ('len', c_int),      # 0: Length of n[] in number of uint32_t
         ('n0inv', c_uint),   # 4: -1 / n[0] mod 2^32
         ('n', c_uint * 64),  # 8: modulus as little endian array
         ('rr', c_uint * 64), # 264: R^2 as little endian array
+        ('exponent', c_int), # 520: 3 or 65537
+    ]
+
+class ImgRSAPublicKey96(LittleEndianStructure):
+    _pack_ = 1
+    _fields_ = [
+        ('len', c_int),      # 0: Length of n[] in number of uint32_t
+        ('n0inv', c_uint),   # 4: -1 / n[0] mod 2^32
+        ('n', c_uint * 96),  # 8: modulus as little endian array
+        ('rr', c_uint * 96), # 264: R^2 as little endian array
         ('exponent', c_int), # 520: 3 or 65537
     ]
 
@@ -699,8 +709,13 @@ def imah_get_auth_params(po, pkghead):
         return (None)
     if isinstance(auth_key_data, str):
         auth_key = RSA.importKey(auth_key_data)
-    elif len(auth_key_data) == sizeof(ImgRSAPublicKey):
-        auth_key_struct = ImgRSAPublicKey()
+    elif len(auth_key_data) == sizeof(ImgRSAPublicKey64):
+        auth_key_struct = ImgRSAPublicKey64()
+        memmove(addressof(auth_key_struct), auth_key_data, sizeof(auth_key_struct))
+        auth_key_n = combine_int_array(auth_key_struct.n, 32)
+        auth_key = RSA.construct( (auth_key_n, auth_key_struct.exponent, ) )
+    elif len(auth_key_data) == sizeof(ImgRSAPublicKey96):
+        auth_key_struct = ImgRSAPublicKey96()
         memmove(addressof(auth_key_struct), auth_key_data, sizeof(auth_key_struct))
         auth_key_n = combine_int_array(auth_key_struct.n, 32)
         auth_key = RSA.construct( (auth_key_n, auth_key_struct.exponent, ) )
