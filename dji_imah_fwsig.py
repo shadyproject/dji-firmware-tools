@@ -171,12 +171,41 @@ keys = {
     ]),
 
     # RSA authentication keys
+    "PRAK-2021-09":  bytes.fromhex(( # Provisioning RSA Auth Key v9; published 2024-02-07 by Mefistotelis
+        # first use on 2021-09-27; used for:
+        # WM260 FW V00.20.0101-V90.04.1050, for m0802
+        "6000000009cdeff2c72ec07a6444709871e86dfd546ec7208c9c28a87a2e0fc9"
+        "c0f255e3dd4ea0928b15e4499a57dc1f3ca88cfae396418604989117dca6ee36"
+        "04c70a3f0d5b738ac02d253bc8d08e539b453a5843d982ca4bbd4e455745b87a"
+        "7aa9b37fdd5d015c7b9f9424bcbdb8bc084029e49183c0ad295b48d83c079952"
+        "9b8468dd9b5ea0988378371168c069e1fe8580152ac84ba5b5ab4a854b03f865"
+        "2a7308c87c41fac262cbc84a6d31c4ee8ebc91d2eb58322339b5bfa5269be741"
+        "f6a7ae894a90b017353ea1f6267fc1dbaa50f72ce5bb23a377f9316b1b6c35a3"
+        "97564c718a9048aa138e6f76f74d8a26edd003fb32961976628275b6ccc987e4"
+        "6f4a34776c088cc71900bf1a14587d34f9295ceeafba1eedcbdda7337d41dc45"
+        "a111671e8e47a94bc56a1c258db0a74147ca89ce156a10bf8adec67745e345fc"
+        "37a0099be618fcd0e73cdc25d260e812573fe996f35bf68502db4e6fa0d15d76"
+        "36cba2884399fdce27aa3e398fd4f812a01b3bef5eb2de229e5cbbffd1e60ee0"
+        "654c9fb552b2f5deafee5316457f757c14765b6faee11a8c0ba45c1a53699cc5"
+        "e6f44de888886acfa58539a0c6798bbce1b0221795dbfa5e6b7d02b8ea4a680b"
+        "ac794299fae7722ada184daaf1956883d0011fb602ea7c407ec3d03aaab4f1b4"
+        "4587ce7eaaa2c3915b33e577dda367e159c58df82461ed2572128058aec4edde"
+        "22c7885960d42f3db570678468ccd6c4ef6d4ec0459bd8b1dd535bc585d11c7e"
+        "3f3d2d20377da0bc05c393c747c8fa2754bbe11d3eed7f9a97c1e186a10f58e1"
+        "c6bc961466e270f7305fc5c4afd3ab2dc6dba6fbb1bd96ddc4ed7d3580756038"
+        "9b828d46d2c4d197b4c977cf2b81c96d623944ebd37cb223056bb28372baad7d"
+        "33d75cea3534b000dd0d6deb9fc0290e81636ca7ed808fd99924435a74c6b682"
+        "729c43bbc4c8fac6d8ab68da0e65213b3f589f46ce91387ceb050f893bb46a57"
+        "2b24cacb2e05b393f2ecbf1a6a0b87bade39490e640ecb598d49130b8cd6e49b"
+        "95d113acb04b92b05be38732af3195351ba0d7cd0f4aae0af5d8706f1dc5f60a"
+        "80bd53d537c0796a01000100"
+    )),
     "PRAK-2018-01":  bytes.fromhex(( # Provisioning RSA Auth Key v8; published 2021-09-30 by Mefistotelis
-        # first use on 2021-02-03; used for:
-        # RCS231 FW V01.00.0000
-        # RC-N1-WM161b FW V01.00.0000
-        # RCJS170 FW V01.00.0000
-        # RCSS170 FW V01.00.0000
+        # first use on 2020-04-23; used for:
+        # RCS231 FW V01.00.0000-V04.13.0200
+        # RC-N1-WM161b FW V01.00.0000-V04.11.0016
+        # RCJS170 FW V01.00.0000-V01.01.0000
+        # RCSS170 FW V00.05.1505-V02.00.0407
         "400000008f73897091b44b1eeef365bc3b7bcca12798f87d0c1523cdca37eee2"
         "5b83ef4750bc04025aeb0a929b9ed5e228242a866a7b5cfa3c0a9f2681553026"
         "476976f9a31d72752b58a41ad4553bd007504dfa7247688140e130774d2d5952"
