@@ -78,6 +78,8 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
     """
     module_cmdopts = ""
     module_changes_limit = 0
+    # set parameters (keys, mostly) to extract specific known firmware files
+    # use xxAK-9999-99 for unknown 256-byte auth key, xxAK-9999-98 for unknown 384-byte auth key
     if (m := re.match(r'^.*/(ac103)([._].*)?[.](bin|cfg|enc|fw|img|sig|ta|txt)$', modl_inp_fn, re.IGNORECASE)):
         platform = m.group(1)
         if False:
@@ -515,8 +517,12 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
             module_changes_limit = 2 + 4 + 4 + 256 + 32+16
     elif (m := re.match(r'^.*/(wm265e|wm265m|wm265t)([._].*)?[.](bin|cfg|enc|fw|img|sig|ta|txt)$', modl_inp_fn, re.IGNORECASE)):
         platform = m.group(1)
-        if False:
-            pass # no quirks
+        # specific first level modules
+        platform = m.group(1)
+        if (re.match(r'^.*{:s}_1502_[^/]*[.]fw[.]sig$'.format(platform), modl_inp_fn, re.IGNORECASE)): # the module uses 2048-bit PRAK
+            module_cmdopts = "-k PRAK-9999-99 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
+            # allow change of 2 bytes from auth key name, 256 from signature, up to 3x16 chunk padding
+            module_changes_limit = 2 + 256 + 3*16
         else: # if first level module
             module_cmdopts = "-k PRAK-9999-98 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
             # allow change of 2 bytes from auth key name, 384+32 from signature, up to 3x16 chunk padding
