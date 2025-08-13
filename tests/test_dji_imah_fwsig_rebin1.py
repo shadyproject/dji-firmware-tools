@@ -83,8 +83,9 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
         if False:
             pass # no quirks
         else: # if first level module
-            module_cmdopts = "-k PRAK-2020-01 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
-            module_changes_limit = 999999 # SLAK signature is shorter, making file layout different
+            module_cmdopts = "-k PRAK-9999-98 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
+            # allow change of 2 bytes from auth key name, 384+32 from signature, up to 3x16 chunk padding
+            module_changes_limit = 2 + 384 + 32 + 3*16
     elif (m := re.match(r'^.*/(ag406|ag407|ag408|ag410|ag411)([._].*)?[.](bin|cfg|enc|fw|img|sig|ta|txt)$', modl_inp_fn, re.IGNORECASE)):
         platform = m.group(1)
         if (re.match(r'^.*{:s}_0801_[^/]*[.]fw_0801.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
@@ -172,8 +173,9 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
         if False:
             pass # no quirks
         else: # if first level module
-            module_cmdopts = "-k PRAK-2020-01 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
-            module_changes_limit = 999999 # SLAK signature is shorter, making file layout different
+            module_cmdopts = "-k PRAK-2021-09 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
+            # allow change of 2 bytes from auth key name, 384+32 from signature, up to 3x16 chunk padding
+            module_changes_limit = 2 + 384 + 32 + 3*16
     elif (m := re.match(r'^.*/(pm320)([._].*)?[.](bin|cfg|enc|fw|img|sig|ta|txt)$', modl_inp_fn, re.IGNORECASE)):
         platform = m.group(1)
         if (re.match(r'^.*{:s}_0702_[^/]*[.]fw_0702.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
@@ -187,7 +189,8 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
         # specific first level modules with different keys
         elif (re.match(r'^.*pm320_2805_v[0-9a-z_.-]*[.]pro[.]fw[.]sig$', modl_inp_fn, re.IGNORECASE)):
             module_cmdopts = "-k PRAK-2021-09 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
-            module_changes_limit = 999999 # SLAK signature is shorter, making file layout different
+            # allow change of 2 bytes from auth key name, 384+32 from signature, up to 3x16 chunk padding
+            module_changes_limit = 2 + 384 + 32 + 3*16
         else: # if first level module
             module_cmdopts = "-k PRAK-2020-01 -k UFIE-2020-04"
             # allow change of 2 bytes from auth key name, 4+4 from enc+dec checksum, 256 from signature, up to 2*16 chunk padding
@@ -439,15 +442,17 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
         if False:
             pass # no quirks
         else: # if first level module
-            module_cmdopts = "-k PRAK-2019-09 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
-            module_changes_limit = 999999 # SLAK signature is shorter, making file layout different
+            module_cmdopts = "-k PRAK-9999-98 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
+            # allow change of 2 bytes from auth key name, 384+32 from signature, up to 3x16 chunk padding
+            module_changes_limit = 2 + 384 + 32 + 3*16
     elif (m := re.match(r'^.*/(wm1695)([._].*)?[.](bin|cfg|enc|fw|img|sig|ta|txt)$', modl_inp_fn, re.IGNORECASE)):
         platform = m.group(1)
         if False:
             pass # no quirks
         else: # if first level module
-            module_cmdopts = "-k PRAK-2019-09 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
-            module_changes_limit = 999999 # SLAK signature is shorter, making file layout different
+            module_cmdopts = "-k PRAK-9999-98 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
+            # allow change of 2 bytes from auth key name, 384+32 from signature, up to 3x16 chunk padding
+            module_changes_limit = 2 + 384 + 32 + 3*16
     elif (m := re.match(r'^.*/(wm220)([._].*)?[.](bin|cfg|enc|fw|img|sig|ta|txt)$', modl_inp_fn, re.IGNORECASE)):
         platform = m.group(1)
         if (re.match(r'^.*{:s}_0801_[^/]*[.]fw_0801.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
@@ -513,8 +518,9 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
         if False:
             pass # no quirks
         else: # if first level module
-            module_cmdopts = "-k PRAK-2019-09 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
-            module_changes_limit = 999999 # SLAK signature is shorter, making file layout different
+            module_cmdopts = "-k PRAK-9999-98 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
+            # allow change of 2 bytes from auth key name, 384+32 from signature, up to 3x16 chunk padding
+            module_changes_limit = 2 + 384 + 32 + 3*16
     elif (m := re.match(r'^.*/(wm240|wm245|wm246)([._].*)?[.](bin|cfg|enc|fw|img|sig|ta|txt)$', modl_inp_fn, re.IGNORECASE)):
         platform = m.group(1)
         if (re.match(r'^.*{:s}_0901_[^/]*[.]fw_0901.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
@@ -567,11 +573,13 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
         # specific nested modules
         elif (re.match(r'^.*{:s}_0802_[^/]*[.]fw_0802.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
             module_cmdopts = "-k PRAK-2021-09 -k TBIE-2020-02" # first level key is not publihed, making this unused
-            module_changes_limit = 999999 # SLAK signature is shorter, making file layout different
+            # allow change of 2 bytes from auth key name, 384+32 from signature, up to 3x16 chunk padding
+            module_changes_limit = 2 + 384 + 32 + 3*16
         # specific first level modules with different keys
         elif (re.match(r'^.*/(wm260|wm2605)_0802_v[0-9a-z_.-]*[.]pro[.]fw[.]sig$', modl_inp_fn, re.IGNORECASE)):
             module_cmdopts = "-k PRAK-2021-09 -k UFIE-2021-08 -f" # UFIE not published, forcing extract encrypted
-            module_changes_limit = 999999 # SLAK signature is shorter, making file layout different
+            # allow change of 2 bytes from auth key name, 384+32 from signature, up to 3x16 chunk padding
+            module_changes_limit = 2 + 384 + 32 + 3*16
         # specific first level modules with encrypted data checksum verification issues
         elif (re.match(r'^.*V00[.]20[.]0101_wm260_dji_system/wm260([._].*)?[.]cfg[.]sig$', modl_inp_fn, re.IGNORECASE) or
           re.match(r'^.*V01[.]00[.]0100_wm260_dji_system/wm260([._].*)?[.]cfg[.]sig$', modl_inp_fn, re.IGNORECASE)):
@@ -587,8 +595,9 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
         if False:
             pass # no quirks
         else: # if first level module
-            module_cmdopts = "-k PRAK-2019-09 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
-            module_changes_limit = 999999 # SLAK signature is shorter, making file layout different
+            module_cmdopts = "-k PRAK-9999-98 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
+            # allow change of 2 bytes from auth key name, 384+32 from signature, up to 3x16 chunk padding
+            module_changes_limit = 2 + 384 + 32 + 3*16
     else:
         platform = "unknown"
         module_cmdopts = ""
@@ -622,6 +631,11 @@ def case_dji_imah_fwsig_rebin(capsys, cmdargs, modl_inp_fn):
      re.match(r'^.*-unpack_p[0-9]+.*[.]img[.]sig$', modl_inp_fn, re.IGNORECASE) or
      re.match(r'^.*-part_p[0-9]+.*[.]img[.]sig$', modl_inp_fn, re.IGNORECASE)):
         ignore_inp_end_padding = True
+    # Select auth key with private part which we can use for signing
+    if (" PRAK-9999-98" in extra_cmdopts) or (" PRAK-2021-09" in extra_cmdopts): # 3072 bit auth key used
+        auth_priv_key="SLAK-2025-08"
+    else:  # 2048 bit auth key used
+        auth_priv_key="SLAK-2018-01"
 
     inp_path, inp_filename = os.path.split(modl_inp_fn)
     inp_path = pathlib.Path(inp_path)
@@ -641,11 +655,11 @@ def case_dji_imah_fwsig_rebin(capsys, cmdargs, modl_inp_fn):
     with patch.object(sys, 'argv', command):
         dji_imah_fwsig_main()
     # We do not have private parts of auth keys used for signing - use OG community key instead
-    # Different signature means we will get up to 256 different bytes in the resulting file
+    # Different signature means we will get up to 256 or 384 different bytes (depending on which SLAK) in the resulting file
     # Additional 2 bytes of difference is the FourCC - two first bytes of it were changed
-    modify_head_ini_option("{:s}_head.ini".format(pfx_out_fn), [('auth_key','SLAK',)])
+    modify_head_ini_option("{:s}_head.ini".format(pfx_out_fn), [('auth_key',"SLAK",)])
     # Re-sign the module
-    command = [os.path.join(".", "dji_imah_fwsig.py"), "-vv"] + shlex.split(extra_cmdopts) + ["-s", "-m", pfx_out_fn, "-i", modl_out_fn]
+    command = [os.path.join(".", "dji_imah_fwsig.py"), "-vv", "-k", auth_priv_key] + shlex.split(extra_cmdopts) + ["-s", "-m", pfx_out_fn, "-i", modl_out_fn]
     LOGGER.info(' '.join(command))
     with patch.object(sys, 'argv', command):
         dji_imah_fwsig_main()
