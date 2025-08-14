@@ -172,8 +172,11 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
             module_changes_limit = 2 + 256 + 3*16
     elif (m := re.match(r'^.*/(hg330)([._].*)?[.](bin|cfg|enc|fw|img|sig|ta|txt)$', modl_inp_fn, re.IGNORECASE)):
         platform = m.group(1)
-        if False:
-            pass # no quirks
+        # specific first level modules
+        if (re.match(r'^.*{:s}_1202_[^/]*[.]fw[.]sig$'.format(platform), modl_inp_fn, re.IGNORECASE)): # the module uses 2048-bit PRAK
+            module_cmdopts = "-k PRAK-9999-99 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
+            # allow change of 2 bytes from auth key name, 256+16 from signature, up to 3x16 chunk padding
+            module_changes_limit = 2 + 256 + 16 + 3*16
         else: # if first level module
             module_cmdopts = "-k PRAK-2021-09 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
             # allow change of 2 bytes from auth key name, 384+32 from signature, up to 3x16 chunk padding
@@ -518,11 +521,10 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
     elif (m := re.match(r'^.*/(wm265e|wm265m|wm265t)([._].*)?[.](bin|cfg|enc|fw|img|sig|ta|txt)$', modl_inp_fn, re.IGNORECASE)):
         platform = m.group(1)
         # specific first level modules
-        platform = m.group(1)
         if (re.match(r'^.*{:s}_1502_[^/]*[.]fw[.]sig$'.format(platform), modl_inp_fn, re.IGNORECASE)): # the module uses 2048-bit PRAK
             module_cmdopts = "-k PRAK-9999-99 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
-            # allow change of 2 bytes from auth key name, 256 from signature, up to 3x16 chunk padding
-            module_changes_limit = 2 + 256 + 3*16
+            # allow change of 2 bytes from auth key name, 256+16 from signature, up to 3x16 chunk padding
+            module_changes_limit = 2 + 256 + 16 + 3*16
         else: # if first level module
             module_cmdopts = "-k PRAK-9999-98 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
             # allow change of 2 bytes from auth key name, 384+32 from signature, up to 3x16 chunk padding
@@ -578,11 +580,11 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
             module_changes_limit = 2 + 4 + 4 + 256 + 9*16 + 32 + 6*16
         # specific nested modules
         elif (re.match(r'^.*{:s}_0802_[^/]*[.]fw_0802.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
-            module_cmdopts = "-k PRAK-2021-09 -k TBIE-2020-02" # first level key is not publihed, making this unused
+            module_cmdopts = "-k PRAK-2021-09 -k TBIE-2021-08" # first level key is not published, making this unused
             # allow change of 2 bytes from auth key name, 384+32 from signature, up to 3x16 chunk padding
             module_changes_limit = 2 + 384 + 32 + 3*16
         # specific first level modules with different keys
-        elif (re.match(r'^.*/(wm260|wm2605)_0802_v[0-9a-z_.-]*[.]pro[.]fw[.]sig$', modl_inp_fn, re.IGNORECASE)):
+        elif (re.match(r'^.*{:s}_0802_v[0-9a-z_.-]*[.]pro[.]fw[.]sig$'.format(platform), modl_inp_fn, re.IGNORECASE)):
             module_cmdopts = "-k PRAK-2021-09 -k UFIE-2021-08 -f" # UFIE not published, forcing extract encrypted
             # allow change of 2 bytes from auth key name, 384+32 from signature, up to 3x16 chunk padding
             module_changes_limit = 2 + 384 + 32 + 3*16
