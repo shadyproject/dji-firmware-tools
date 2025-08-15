@@ -214,6 +214,9 @@ def test_bin_bootimg_imah_v1_extract(capsys, modl_inp_dir, test_nth):
     ('out/wm247-mavic_2_enterpr_rtk',1,),
     ('out/wm260-mavic_pro_3',1,),
     ('out/wm2605-mavic_3_classic',1,),
+    ('out/wm265e-mavic_pro_3_enterpr',1,),
+    ('out/wm265m-mavic_pro_3_mulspectr',1,),
+    ('out/wm265t-mavic_pro_3_thermal',1,),
   ] )
 def test_bin_bootimg_imah_v2_extract(capsys, modl_inp_dir, test_nth):
     """ Test if boot images are extracting correctly, and prepare data for tests which use the extracted files.
