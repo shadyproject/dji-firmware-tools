@@ -141,7 +141,7 @@ keys = {
     ]),
     "UFIE-2021-08":  bytes([ # Update Firmware Image Encryption key; published 2022-04-01 by Felix Domke
         # first use on 2021-08-28; used for: WM260 FW V00.20.0101-V90.04.1050, WM2605,
-        # WM265e FW V00.01.0101-V90.04.0508, WM265m, WM265t,
+        # WM265e FW V00.01.0101 (only),
         0x56, 0xcf, 0x6d, 0x75, 0x7a, 0x45, 0x32, 0x4c, 0x6e, 0x1d, 0x97, 0x85, 0x41, 0x5f, 0x44, 0x85
     ]),
     "UFIE-2021-06":  bytes([ # Update Firmware Image Encryption key; published 2021-08-26 by OGs
