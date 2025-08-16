@@ -523,7 +523,12 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
         # specific FW version with keys reused from wm260
         if (re.match(r'^.*/V00.01.0101[^/]*/{:s}.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
             # specific nested modules
-            if (re.match(r'^.*{:s}_1502_[^/]*[.]fw_1502.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
+            if (re.match(r'^.*{:s}_1502_[^/]*[.]fw_1502.*adsb_soc[^/]*[.]img[.]sig$'.format(platform), modl_inp_fn, re.IGNORECASE)):
+                module_cmdopts = "-k PRAK-2020-04 -k TBIE-9999-99 -f" # TBIE not published, forcing extract encrypted
+                # allow change of 2 bytes from auth key name, 4+4 from enc+dec checksum, 256 from signature, up to 11x16 chunk padding, 32 payload digest
+                module_changes_limit = 2 + 4 + 4 + 256 + 11*16 + 32
+            # specific nested modules
+            elif (re.match(r'^.*{:s}_1502_[^/]*[.]fw_1502.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
                 module_cmdopts = "-k PRAK-2020-01 -k TBIE-2020-02"
                 # allow change of 2 bytes from auth key name, 4+4 from enc+dec checksum, 256 from signature, up to 9x16 chunk padding, 32 payload digest, 6x16 unknown additional
                 module_changes_limit = 2 + 4 + 4 + 256 + 9*16 + 32 + 6*16
@@ -1000,6 +1005,7 @@ def test_dji_imah_fwsig_v2_nested_rebin(capsys, cmdargs, modl_inp_dir, test_nth)
         "{}/*/*-loader_p*.img.sig".format(modl_inp_dir),
         "{}/*/*-unpack_p*.img.sig".format(modl_inp_dir),
         "{}/*/*-part_p*.img.sig".format(modl_inp_dir),
+        "{}/*/*-adsb_soc_p*.img.sig".format(modl_inp_dir),
         # output from test_bin_archives_imah_v2_nested_extract
         "{}/*/*-extr1/vendor-extr1/ta/*-*-*0.ta".format(modl_inp_dir),
         "{}/*/*-extr1/vendor-extr1/ta/*-*-*1.ta".format(modl_inp_dir),
