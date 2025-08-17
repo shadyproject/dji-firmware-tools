@@ -521,7 +521,8 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
     elif (m := re.match(r'^.*/(wm265e)([._].*)?[.](bin|cfg|enc|fw|img|sig|ta|txt)$', modl_inp_fn, re.IGNORECASE)):
         platform = m.group(1)
         # specific FW version with keys reused from wm260
-        if (re.match(r'^.*/V00.01.0101[^/]*/{:s}.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
+        if (re.match(r'^.*/V00.01.0101[^/]*/{:s}.*$'.format(platform), modl_inp_fn, re.IGNORECASE) or
+          re.match(r'^.*/V90.00.0001[^/]*/{:s}.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
             # specific nested modules
             if (re.match(r'^.*{:s}_1502_[^/]*[.]fw_1502.*adsb_soc[^/]*[.]img[.]sig$'.format(platform), modl_inp_fn, re.IGNORECASE)):
                 module_cmdopts = "-k PRAK-2020-04 -k TBIE-9999-99 -f" # TBIE not published, forcing extract encrypted
@@ -554,8 +555,8 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
         # specific first level modules with different keys
         elif (re.match(r'^.*{:s}_1502_[^/]*[.]fw[.]sig$'.format(platform), modl_inp_fn, re.IGNORECASE)):
             module_cmdopts = "-k PRAK-9999-99 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
-            # allow change of 2 bytes from auth key name, 256+16 from signature, up to 3x16 chunk padding
-            module_changes_limit = 2 + 256 + 16 + 3*16
+            # allow change of 2 bytes from auth key name, 4+4 from enc+dec checksum, 256 from signature, up to 9x16 chunk padding, 32 payload digest, 6x16 unknown additional
+            module_changes_limit = 2 + 4 + 4 + 256 + 9*16 + 32 + 6*16
         else: # if first level module
             module_cmdopts = "-k PRAK-9999-98 -k UFIE-9999-99 -f" # UFIE not published, forcing extract encrypted
             # allow change of 2 bytes from auth key name, 384+32 from signature, up to 3x16 chunk padding
