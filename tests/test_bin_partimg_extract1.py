@@ -233,13 +233,47 @@ def test_bin_bootimg_imah_v2_extract(capsys, modl_inp_dir, test_nth):
         "{}/*/*_1301-extr1/bootarea.img".format(modl_inp_dir),
         "{}/*/*_1301-extr1/loader.img".format(modl_inp_dir),
         "{}/*/*_1502-extr1/bootarea.img".format(modl_inp_dir),
-        "{}/*/*_1502-extr1/vendor-extr1/adsb/adsb_soc.img".format(modl_inp_dir),
         "{}/*/*_2607.bin".format(modl_inp_dir), # in ag500 and ag501, this module is a bootarea.img as well
         "{}/*/*_2801-extr1/bootarea.img".format(modl_inp_dir),
       ) ]) if os.path.isfile(fn)]
 
     # The m2607 is not a bootarea.img in many firmwares
     img_inp_filenames = [fn for fn in img_inp_filenames if not re.match(r'^.*(ag600|ag601|pm320|pm430|wm247)_2607_v[0-9a-z_.-]*_2607[.]bin$', fn, re.IGNORECASE)]
+
+    if len(img_inp_filenames) < 1:
+        pytest.skip("no package files to test in this directory")
+
+    for img_inp_fn in img_inp_filenames:
+        case_bin_bootimg_extract(img_inp_fn)
+        capstdout, _ = capsys.readouterr()
+    pass
+
+@pytest.mark.order(5) # must be run after test_bin_archives_imah_v2_nested_extract
+@pytest.mark.fw_imah_v2
+@pytest.mark.parametrize("modl_inp_dir,test_nth", [
+    ('out/pm320-matrice30',1,),
+    ('out/pm430-matrice300',1,),
+    ('out/wm170-fpv_racer',1,),
+    ('out/wm231-mavic_air_2',1,),
+    ('out/wm232-mavic_air_2s',1,),
+    ('out/wm260-mavic_pro_3',1,),
+    ('out/wm2605-mavic_3_classic',1,),
+    ('out/wm265e-mavic_pro_3_enterpr',1,),
+    ('out/wm265m-mavic_pro_3_mulspectr',1,),
+    ('out/wm265t-mavic_pro_3_thermal',1,),
+  ] )
+def test_bin_bootimg_imah_v2_nested_extract(capsys, modl_inp_dir, test_nth):
+    """ Test if boot images are extracting correctly, and prepare data for tests which use the extracted files.
+    """
+    if test_nth < 1:
+        pytest.skip("limited scope")
+
+    img_inp_filenames = [fn for fn in itertools.chain.from_iterable([ glob.glob(e, recursive=True) for e in (
+        # Some nested archives contain yet another set of boot images with IMaH encryption
+        "{}/*/*_0801-extr1/vendor-extr1/adsb/adsb_soc.img".format(modl_inp_dir),
+        "{}/*/*_0802-extr1/vendor-extr1/adsb/adsb_soc.img".format(modl_inp_dir),
+        "{}/*/*_1502-extr1/vendor-extr1/adsb/adsb_soc.img".format(modl_inp_dir),
+      ) ]) if os.path.isfile(fn)]
 
     if len(img_inp_filenames) < 1:
         pytest.skip("no package files to test in this directory")

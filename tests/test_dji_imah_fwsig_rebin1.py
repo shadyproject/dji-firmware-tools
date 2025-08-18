@@ -288,8 +288,11 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
             module_changes_limit = 2 + 256
     elif (m := re.match(r'^.*/(rc-n1-wm260)([._].*)?[.](bin|cfg|enc|fw|img|sig|ta|txt)$', modl_inp_fn, re.IGNORECASE)):
         platform = m.group(1)
-        if False:
-            pass # no quirks
+        # specific nested modules
+        if (re.match(r'^.*{:s}_1502_[^/]*[.]fw_1502.*adsb_soc.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
+            module_cmdopts = "-k PRAK-2020-04 -k TBIE-9999-99 -f" # TBIE not published, forcing extract encrypted
+            # allow change of 2 bytes from auth key name, 4+4 from enc+dec checksum, 256 from signature, up to 11x16 chunk padding, 32 payload digest
+            module_changes_limit = 2 + 4 + 4 + 256 + 11*16 + 32
         else: # if first level module or nested within m1301
             module_cmdopts = "-k PRAK-2018-01 -k TBIE-2020-04"
             # allow change of 2 bytes from auth key name, 256 from signature, up to 16 chunk padding
@@ -356,6 +359,11 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
             module_cmdopts = "-k PRAK-2018-01 -k TBIE-2020-04"
             # allow change of 2 bytes from auth key name, 4+4 from enc+dec checksum, 256 from signature, up to 11x16 chunk padding, 32 payload digest
             module_changes_limit = 2 + 4 + 4 + 256 + 11*16 + 32
+        # specific nested modules
+        elif (re.match(r'^.*{:s}_0801_[^/]*[.]fw_0801.*adsb_soc.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
+            module_cmdopts = "-k PRAK-2020-04 -k TBIE-9999-99 -f" # TBIE not published, forcing extract encrypted
+            # allow change of 2 bytes from auth key name, 4+4 from enc+dec checksum, 256 from signature, up to 11x16 chunk padding, 32 payload digest
+            module_changes_limit = 2 + 4 + 4 + 256 + 11*16 + 32
         # remaining nested modules
         elif (re.match(r'^.*{:s}_0701_[^/]*[.]fw_0701.*$'.format(platform), modl_inp_fn, re.IGNORECASE) or
           re.match(r'^.*{:s}_0801_[^/]*[.]fw_0801.*$'.format(platform), modl_inp_fn, re.IGNORECASE) or
@@ -369,8 +377,13 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
             module_changes_limit = 2 + 4 + 256
     elif (m := re.match(r'^.*/(wm170|wm232|gl170|pm430|ag500)([._].*)?[.](bin|cfg|enc|fw|img|sig|ta|txt)$', modl_inp_fn, re.IGNORECASE)):
         platform = m.group(1)
-        # nested modules
-        if (re.match(r'^.*{:s}_0701_[^/]*[.]fw_0701.*$'.format(platform), modl_inp_fn, re.IGNORECASE) or
+        # specific nested modules
+        if (re.match(r'^.*{:s}_0801_[^/]*[.]fw_0801.*adsb_soc.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
+            module_cmdopts = "-k PRAK-2020-04 -k TBIE-9999-99 -f" # TBIE not published, forcing extract encrypted
+            # allow change of 2 bytes from auth key name, 4+4 from enc+dec checksum, 256 from signature, up to 11x16 chunk padding, 32 payload digest
+            module_changes_limit = 2 + 4 + 4 + 256 + 11*16 + 32
+        # remaining nested modules
+        elif (re.match(r'^.*{:s}_0701_[^/]*[.]fw_0701.*$'.format(platform), modl_inp_fn, re.IGNORECASE) or
           re.match(r'^.*{:s}_0801_[^/]*[.]fw_0801.*$'.format(platform), modl_inp_fn, re.IGNORECASE) or
           re.match(r'^.*{:s}_0802_[^/]*[.]fw_0802.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
             module_cmdopts = "-k PRAK-2020-01 -k TBIE-2020-02"
@@ -622,7 +635,12 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
     elif (m := re.match(r'^.*/(wm260|wm2605)([.][a-z]*|[_][0-9]{4}.*)?[.](bin|cfg|enc|fw|img|sig|ta|txt)$', modl_inp_fn, re.IGNORECASE)):
         platform = m.group(1)
         # specific nested modules
-        if (re.match(r'^.*{:s}_1502_[^/]*[.]fw_1502.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
+        if (re.match(r'^.*{:s}_1502_[^/]*[.]fw_1502.*adsb_soc.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
+            module_cmdopts = "-k PRAK-2020-04 -k TBIE-9999-99 -f" # TBIE not published, forcing extract encrypted
+            # allow change of 2 bytes from auth key name, 4+4 from enc+dec checksum, 256 from signature, up to 11x16 chunk padding, 32 payload digest
+            module_changes_limit = 2 + 4 + 4 + 256 + 11*16 + 32
+        # specific nested modules
+        elif (re.match(r'^.*{:s}_1502_[^/]*[.]fw_1502.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
             module_cmdopts = "-k PRAK-2020-01 -k TBIE-2020-02"
             # allow change of 2 bytes from auth key name, 4+4 from enc+dec checksum, 256 from signature, up to 9x16 chunk padding, 32 payload digest, 6x16 unknown additional
             module_changes_limit = 2 + 4 + 4 + 256 + 9*16 + 32 + 6*16
@@ -937,7 +955,7 @@ def test_dji_imah_fwsig_v2_rebin(capsys, cmdargs, pkg_inp_dir, test_nth):
     pass
 
 
-@pytest.mark.order(5) # must be run after test_bin_archives_imah_v2_extract, test_bin_bootimg_imah_v2_extract, test_bin_archives_imah_v2_nested_extract
+@pytest.mark.order(6) # must be run after test_bin_archives_imah_v2_extract, test_bin_bootimg_imah_v2_extract, test_bin_archives_imah_v2_nested_extract, test_bin_bootimg_imah_v2_nested_extract
 @pytest.mark.fw_imah_v2
 @pytest.mark.parametrize("modl_inp_dir,test_nth", [
     ('out/ac103-osmo_action_2',1,),
@@ -1006,6 +1024,7 @@ def test_dji_imah_fwsig_v2_nested_rebin(capsys, cmdargs, modl_inp_dir, test_nth)
         "{}/*/*-loader_p*.img.sig".format(modl_inp_dir),
         "{}/*/*-unpack_p*.img.sig".format(modl_inp_dir),
         "{}/*/*-part_p*.img.sig".format(modl_inp_dir),
+        # output from test_bin_bootimg_imah_v2_nested_extract
         "{}/*/*-adsb_soc_p*.img.sig".format(modl_inp_dir),
         # output from test_bin_archives_imah_v2_nested_extract
         "{}/*/*-extr1/vendor-extr1/ta/*-*-*0.ta".format(modl_inp_dir),
