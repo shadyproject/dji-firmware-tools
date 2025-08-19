@@ -183,10 +183,17 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
             module_changes_limit = 2 + 384 + 32 + 3*16
     elif (m := re.match(r'^.*/(pm320)([._].*)?[.](bin|cfg|enc|fw|img|sig|ta|txt)$', modl_inp_fn, re.IGNORECASE)):
         platform = m.group(1)
-        if (re.match(r'^.*{:s}_0702_[^/]*[.]fw_0702.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
+        # specific nested modules
+        if (re.match(r'^.*{:s}_0802_[^/]*[.]fw_0802.*adsb_soc.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
+            module_cmdopts = "-k PRAK-2020-04 -k TBIE-9999-99 -f" # TBIE not published, forcing extract encrypted
+            # allow change of 2 bytes from auth key name, 4+4 from enc+dec checksum, 256 from signature, up to 11x16 chunk padding, 32 payload digest
+            module_changes_limit = 2 + 4 + 4 + 256 + 11*16 + 32
+        # specific nested modules
+        elif (re.match(r'^.*{:s}_0702_[^/]*[.]fw_0702.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
             module_cmdopts = "-k PRAK-2020-01 -k TBIE-2020-02"
             # allow change of 2 bytes from auth key name, 4+4 from enc+dec checksum, 256 from signature, up to 9x16 chunk padding, 32 payload digest, 6x16 unknown additional
             module_changes_limit = 2 + 4 + 4 + 256 + 9*16 + 32 + 6*16
+        # specific nested modules
         elif (re.match(r'^.*{:s}_0802_[^/]*[.]fw_0802.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
             module_cmdopts = "-k PRAK-2020-01 -k TBIE-2020-02"
             # allow change of 2 bytes from auth key name, 256 from signature, up to 3x16 chunk padding
@@ -378,7 +385,8 @@ def get_params_for_dji_imah_fwsig(modl_inp_fn):
     elif (m := re.match(r'^.*/(wm170|wm232|gl170|pm430|ag500)([._].*)?[.](bin|cfg|enc|fw|img|sig|ta|txt)$', modl_inp_fn, re.IGNORECASE)):
         platform = m.group(1)
         # specific nested modules
-        if (re.match(r'^.*{:s}_0801_[^/]*[.]fw_0801.*adsb_soc.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
+        if (re.match(r'^.*{:s}_0801_[^/]*[.]fw_0801.*adsb_soc.*$'.format(platform), modl_inp_fn, re.IGNORECASE) or
+          re.match(r'^.*{:s}_0802_[^/]*[.]fw_0802.*adsb_soc.*$'.format(platform), modl_inp_fn, re.IGNORECASE)):
             module_cmdopts = "-k PRAK-2020-04 -k TBIE-9999-99 -f" # TBIE not published, forcing extract encrypted
             # allow change of 2 bytes from auth key name, 4+4 from enc+dec checksum, 256 from signature, up to 11x16 chunk padding, 32 payload digest
             module_changes_limit = 2 + 4 + 4 + 256 + 11*16 + 32
